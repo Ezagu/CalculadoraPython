@@ -1,15 +1,16 @@
-class Calculadora:
+class Operaciones:
+    """Realiza las operaciones"""
+
     def __init__(self):
         self.__stack = []
-        self.__elements_list = []
 
-    def resultado(self, operation_RPN):
+    def resultado(self, operation_rpn):
         """Resultado de la operación
 
         Args:
             operation_RPN (list(char)): lista de caracteres en polaca inversa que representa la operación
         """
-        for element in operation_RPN:
+        for element in operation_rpn:
             if element == '+':
                 pop1 = self.__stack.pop()
                 pop2 = self.__stack.pop()
@@ -63,8 +64,3 @@ class Calculadora:
             salida.append(pila_operadores.pop())
 
         return salida
-
-
-c = Calculadora()
-lista = ['8', '/', '2', '*', '(', '2', '+', '2', ')']
-print(c.resultado(c.infijo_a_polaca_inversa(lista)))
