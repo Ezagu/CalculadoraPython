@@ -3,22 +3,13 @@ class Calculadora:
         self.__stack = []
         self.__elements_list = []
 
-    def get_element_list(self):
-        """the element list for the operation"""
-        return self.__elements_list
-
-    def add_element(self, element):
-        """add elements for the operation
+    def resultado(self, operation_RPN):
+        """Resultado de la operación
 
         Args:
-            element (str): element to introduce to operation.
+            operation_RPN (list(char)): lista de caracteres en polaca inversa que representa la operación
         """
-        self.__elements_list.append(element)
-
-    def result(self):
-        """Result of the operation"""
-
-        for element in self.__elements_list:
+        for element in operation_RPN:
             if element == '+':
                 pop1 = self.__stack.pop()
                 pop2 = self.__stack.pop()
@@ -40,13 +31,40 @@ class Calculadora:
                 self.__stack.append(int(element))
         return self.__stack.pop() if self.__stack else None
 
+    def infijo_a_polaca_inversa(self, tokens):
+        """Cambia lista de caracteres de infija a polaca inversa
+
+        Args:
+            tokens (list(char)): Operacion en infija.
+        """
+
+        precedencia = {'+': 1, '-': 1, '*': 2, '/': 2}
+        operadores = {'+', '-', '*', '/'}
+        pila_operadores = []  # Pila para operadores
+        salida = []  # Lista para la salida (RPN)
+
+        for token in tokens:
+            if token in operadores:  # Es un operador
+                while (pila_operadores and pila_operadores[-1] in operadores and
+                       precedencia[token] <= precedencia[pila_operadores[-1]]):
+                    salida.append(pila_operadores.pop())
+                pila_operadores.append(token)
+            elif token == '(':
+                pila_operadores.append(token)
+            elif token == ')':
+                while pila_operadores and pila_operadores[-1] != '(':
+                    salida.append(pila_operadores.pop())
+                pila_operadores.pop()  # Elimina el paréntesis izquierdo
+            else:  # Es un numero
+                salida.append(token)
+
+        # Vacía cualquier operador restante en la pila
+        while pila_operadores:
+            salida.append(pila_operadores.pop())
+
+        return salida
+
 
 c = Calculadora()
-print(c.result())
-c.add_element("4")
-c.add_element("2")
-c.add_element("*")
-c.add_element("3")
-c.add_element("+")
-print(c.result())
-print("PROBANDO GITHUBB")
+lista = ['8', '/', '2', '*', '(', '2', '+', '2', ')']
+print(c.resultado(c.infijo_a_polaca_inversa(lista)))
