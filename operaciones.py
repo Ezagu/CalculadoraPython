@@ -4,43 +4,46 @@ class Operaciones:
     def __init__(self):
         self.__stack = []
 
-    def resultado(self, operation_rpn):
-        """Resultado de la operación
+    def resultado(self, operation):
+        """Devuelve el resultado de la operación"""
+        op = self.infijo_a_polaca_inversa(operation)
+        for element in op:
+            try:
+                if element == '+':
+                    pop1 = self.__stack.pop()
+                    pop2 = self.__stack.pop()
+                    self.__stack.append(pop2 + pop1)
+                elif element == '-':
+                    pop1 = self.__stack.pop()
+                    pop2 = self.__stack.pop()
+                    self.__stack.append(pop2 - pop1)
+                elif element == '/':
+                    pop1 = self.__stack.pop()
+                    pop2 = self.__stack.pop()
+                    self.__stack.append(pop2 / pop1)
+                elif element == 'x':
+                    pop1 = self.__stack.pop()
+                    pop2 = self.__stack.pop()
+                    self.__stack.append(pop2 * pop1)
+                else:
+                    # El caracter es un numero
+                    self.__stack.append(float(element))
+            except:
+                return "SyntaxError"
 
-        Args:
-            operation_RPN (list(char)): lista de caracteres en polaca inversa que representa la operación
-        """
-        for element in operation_rpn:
-            if element == '+':
-                pop1 = self.__stack.pop()
-                pop2 = self.__stack.pop()
-                self.__stack.append(pop2 + pop1)
-            elif element == '-':
-                pop1 = self.__stack.pop()
-                pop2 = self.__stack.pop()
-                self.__stack.append(pop2 - pop1)
-            elif element == '/':
-                pop1 = self.__stack.pop()
-                pop2 = self.__stack.pop()
-                self.__stack.append(pop2 / pop1)
-            elif element == '*':
-                pop1 = self.__stack.pop()
-                pop2 = self.__stack.pop()
-                self.__stack.append(pop2 * pop1)
-            else:
-                # El caracter es un numero
-                self.__stack.append(int(element))
-        return self.__stack.pop() if self.__stack else None
+        result = self.__stack.pop() if self.__stack else None
 
-    def infijo_a_polaca_inversa(self, tokens):
-        """Cambia lista de caracteres de infija a polaca inversa
+        #Convierte el resultado a int si no tiene decimales
+        if result != None and int(result) == result:
+            result = int(result)
 
-        Args:
-            tokens (list(char)): Operacion en infija.
-        """
+        return result
 
-        precedencia = {'+': 1, '-': 1, '*': 2, '/': 2}
-        operadores = {'+', '-', '*', '/'}
+    def infijo_a_polaca_inversa(self, string):
+        """Cambia strings de infija a polaca inversa"""
+        tokens = self.str_to_list(string)
+        precedencia = {'+': 1, '-': 1, 'x': 2, '/': 2}
+        operadores = {'+', '-', 'x', '/'}
         pila_operadores = []  # Pila para operadores
         salida = []  # Lista para la salida (RPN)
 
@@ -64,3 +67,25 @@ class Operaciones:
             salida.append(pila_operadores.pop())
 
         return salida
+    
+    def str_to_list(self, string):
+        list_str = []
+        caracteres = ['+', '-', 'x', '/', '(', ')']
+        digitos = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']
+        current:str = ""
+        for s in string:
+            
+            if s in caracteres:
+                if current != "":
+                    list_str.append(current)
+                    current = ""
+                list_str.append(s)
+            elif s in digitos:
+                current += s
+
+        if current != "":
+            list_str.append(current)
+
+        return list_str
+                
+
