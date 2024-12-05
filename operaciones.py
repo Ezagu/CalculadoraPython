@@ -7,6 +7,11 @@ class Operaciones:
     def resultado(self, operation):
         """Devuelve el resultado de la operación"""
         op = self.infijo_a_polaca_inversa(operation)
+
+        #Si hubo un error en la conversion a polaca inversa, muestra syntax error
+        if op == "SyntaxError":
+            return op
+        
         for element in op:
             try:
                 if element == '+':
@@ -47,21 +52,23 @@ class Operaciones:
         pila_operadores = []  # Pila para operadores
         salida = []  # Lista para la salida (RPN)
 
-        for token in tokens:
-            if token in operadores:  # Es un operador
-                while (pila_operadores and pila_operadores[-1] in operadores and
-                       precedencia[token] <= precedencia[pila_operadores[-1]]):
-                    salida.append(pila_operadores.pop())
-                pila_operadores.append(token)
-            elif token == '(':
-                pila_operadores.append(token)
-            elif token == ')':
-                while pila_operadores and pila_operadores[-1] != '(':
-                    salida.append(pila_operadores.pop())
-                pila_operadores.pop()  # Elimina el paréntesis izquierdo
-            else:  # Es un numero
-                salida.append(token)
-
+        try:
+            for token in tokens:
+                if token in operadores:  # Es un operador
+                    while (pila_operadores and pila_operadores[-1] in operadores and
+                        precedencia[token] <= precedencia[pila_operadores[-1]]):
+                        salida.append(pila_operadores.pop())
+                    pila_operadores.append(token)
+                elif token == '(':
+                    pila_operadores.append(token)
+                elif token == ')':
+                    while pila_operadores and pila_operadores[-1] != '(':
+                        salida.append(pila_operadores.pop())
+                    pila_operadores.pop()  # Elimina el paréntesis izquierdo
+                else:  # Es un numero
+                    salida.append(token)
+        except:
+            return "SyntaxError"
         # Vacía cualquier operador restante en la pila
         while pila_operadores:
             salida.append(pila_operadores.pop())
