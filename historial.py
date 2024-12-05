@@ -20,13 +20,3 @@ class Historial:
         with open("historial.csv", "w", encoding="utf-8") as file:
             #Al abrir el archivo en modo "w" y no hacer nada, se borra el contenidos
             pass
-
-if __name__ == "__main__":
-    h = Historial()
-    h.guardar_operacion("2+2", "4")
-    h.guardar_operacion("3x6", "18")
-    print("Operaciones:", h.get_operaciones())
-    h.borrar_historial()
-    print("Operaciones:", h.get_operaciones())
-    h.guardar_operacion("3x6", "18")
-    print("Operaciones:", h.get_operaciones())
