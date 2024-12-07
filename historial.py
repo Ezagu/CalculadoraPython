@@ -13,10 +13,9 @@ class Historial:
                 datos = linea.split(",")
                 dicc[datos[0]] = datos[1]
         return dicc
-    
-    def borrar_historial(self, events = None):
+
+    def borrar_historial(self, events=None):
         """Elimina el historial de operaciones"""
-        print("Historial borrado")
         with open("historial.csv", "w", encoding="utf-8") as file:
-            #Al abrir el archivo en modo "w" y no hacer nada, se borra el contenidos
+            # Al abrir el archivo en modo "w" y no hacer nada, se borra el contenidos
             pass
